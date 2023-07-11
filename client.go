@@ -54,6 +54,8 @@ type APIClient struct {
 	AnnotationTemplateTypeApi *AnnotationTemplateTypeApiService
 
 	DataViewApi *DataViewApiService
+
+	DataViewUploadApi *DataViewUploadApiService
 }
 
 type service struct {
@@ -75,6 +77,7 @@ func NewAPIClient(cfg *Configuration) *APIClient {
 	c.AnnotationTemplateApi = (*AnnotationTemplateApiService)(&c.common)
 	c.AnnotationTemplateTypeApi = (*AnnotationTemplateTypeApiService)(&c.common)
 	c.DataViewApi = (*DataViewApiService)(&c.common)
+	c.DataViewUploadApi = (*DataViewUploadApiService)(&c.common)
 
 	return c
 }
