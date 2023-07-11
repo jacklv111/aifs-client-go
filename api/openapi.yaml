@@ -1,0 +1,2256 @@
+openapi: 3.0.3
+info:
+  description: aifs api
+  title: Aifs api
+  version: 1.0.0
+servers:
+- url: https://www.example.com/api/open/v1
+tags:
+- description: Operations about annotation template types
+  name: annotation template type
+- description: Operations about annotation templates
+  name: annotation template
+- description: Operations about data views
+  name: data view
+- description: Operations about data view upload
+  name: data view upload
+paths:
+  /annotation-template-types:
+    get:
+      description: Get annotation template type list
+      operationId: getAnnoTemplateTypeList
+      parameters:
+      - description: The number of items to skip before starting to collect the result
+          set
+        explode: true
+        in: query
+        name: offset
+        required: false
+        schema:
+          default: 0
+          format: int32
+          type: integer
+        style: form
+      - description: The numbers of items to return
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          default: 10
+          format: int32
+          maximum: 50
+          minimum: 1
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnnotationTemplateTypeList'
+          description: Successful operation
+      summary: Get annotation template type list
+      tags:
+      - annotation template type
+  /annotation-templates:
+    get:
+      description: Get annotation template list
+      operationId: getAnnoTemplateList
+      parameters:
+      - description: The number of items to skip before starting to collect the result
+          set
+        explode: true
+        in: query
+        name: offset
+        required: false
+        schema:
+          default: 0
+          format: int32
+          type: integer
+        style: form
+      - description: The numbers of items to return
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          default: 10
+          format: int32
+          maximum: 50
+          minimum: 1
+          type: integer
+        style: form
+      - description: annotation template with id in annotation template id list will
+          be got
+        example: "aaa,bbb,ccc"
+        explode: false
+        in: query
+        name: annotationTemplateIdList
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/AnnotationTemplateListItem'
+                type: array
+          description: Successful operation
+      summary: Get annotation template list
+      tags:
+      - annotation template
+    post:
+      description: Create an annotation template
+      operationId: createAnnotationTemplate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAnnotationTemplateRequest'
+        description: Create an new annotation template
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateAnnoTemplateSuccessResp'
+          description: Successful operation
+        "400":
+          description: Invalid input parameters
+      summary: Create an annotation template
+      tags:
+      - annotation template
+    put:
+      description: Update an annotation template
+      operationId: updateAnnotationTemplate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateAnnotationTemplateRequest'
+        description: Update an existed annotation template
+        required: true
+      responses:
+        "200":
+          description: Successful operation
+        "404":
+          description: Annotation template not found
+      summary: Update an annotation template
+      tags:
+      - annotation template
+  /annotation-templates/{annotationTemplateId}:
+    delete:
+      description: Delete an annotation template
+      operationId: deleteAnnotationTemplate
+      parameters:
+      - description: The id of an annotation template
+        explode: false
+        in: path
+        name: annotationTemplateId
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      responses:
+        "200":
+          description: Successful operation
+        "404":
+          description: Annotation template not found
+      summary: Delete an annotation template
+      tags:
+      - annotation template
+  /annotation-templates/{annotationTemplateId}/copy:
+    post:
+      description: Copy an annotation template
+      operationId: copyAnnotationTemplate
+      parameters:
+      - description: The id of an annotation template
+        explode: false
+        in: path
+        name: annotationTemplateId
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/copyAnnotationTemplate_200_response'
+          description: Successful operation
+        "404":
+          description: Annotation template not found
+      summary: Copy an annotation template
+      tags:
+      - annotation template
+  /annotation-templates/{annotationTemplateId}/details:
+    get:
+      description: Get annotation template details
+      operationId: getAnnoTemplateDetails
+      parameters:
+      - description: The id of an annotation template
+        explode: false
+        in: path
+        name: annotationTemplateId
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnnotationTemplateDetails'
+          description: Successful operation
+        "404":
+          description: annotation template not found
+      summary: Get annotation template details
+      tags:
+      - annotation template
+  /data-views:
+    get:
+      description: Get data view list
+      operationId: getDataViewList
+      parameters:
+      - description: The number of items to skip before starting to collect the result
+          set
+        explode: true
+        in: query
+        name: offset
+        required: false
+        schema:
+          default: 0
+          format: int32
+          type: integer
+        style: form
+      - description: The numbers of items to return
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          default: 10
+          format: int32
+          maximum: 50
+          minimum: 1
+          type: integer
+        style: form
+      - description: data view with id in data view id list will be got
+        explode: false
+        in: query
+        name: dataViewIdList
+        required: false
+        schema:
+          example: "aaa,bbb,ccc"
+          type: string
+        style: form
+      - description: "data view name filter, support fuzzy query"
+        explode: true
+        in: query
+        name: dataViewName
+        required: false
+        schema:
+          example: hand
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/DataViewListItem'
+                type: array
+          description: Successful operation
+      summary: Get data view list
+      tags:
+      - data view
+    post:
+      description: Create a data view
+      operationId: createDataView
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateDataViewRequest'
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateDataViewSuccessResp'
+          description: Successful operation
+        "400":
+          description: Invalid input parameters
+      summary: Create a data view
+      tags:
+      - data view
+  /data-views/merge:
+    post:
+      description: "Merge data views, generate a new data view to put the result"
+      operationId: mergeDataViews
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MergeDataViewsRequest'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MergeDataViewsSuccessResp'
+          description: Successful operation
+        "400":
+          description: Invalid input parameters
+      summary: Merge data views
+      tags:
+      - data view
+  /data-views/move:
+    post:
+      description: Move data items from data view A to data view B
+      operationId: moveDataViewItems
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MoveDataViewItemsRequest'
+        required: true
+      responses:
+        "200":
+          description: Successful operation
+        "400":
+          description: Invalid input parameters
+      summary: Move data items between data views
+      tags:
+      - data view
+  /data-views/{dataViewId}:
+    delete:
+      description: Delete a data view
+      operationId: deleteDataView
+      parameters:
+      - description: The id of a data view
+        explode: false
+        in: path
+        name: dataViewId
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      responses:
+        "200":
+          description: Successful operation
+        "404":
+          description: Data view not found
+      summary: Delete a data view
+      tags:
+      - data view
+  /data-views/{dataViewId}/merge:
+    post:
+      description: Merge other data views to current data view
+      operationId: mergeDataViewsToCrurrent
+      parameters:
+      - description: The id of a data view
+        explode: false
+        in: path
+        name: dataViewId
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MergeDataViewsRequest'
+        required: true
+      responses:
+        "200":
+          description: Successful operation
+        "400":
+          description: Invalid input parameters
+      summary: Merge data views
+      tags:
+      - data view
+  /data-views/{dataViewId}/hard-delete:
+    delete:
+      description: Hard delete a data view
+      operationId: hardDeleteDataView
+      parameters:
+      - description: The id of a data view
+        explode: false
+        in: path
+        name: dataViewId
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      responses:
+        "200":
+          description: Successful operation
+        "404":
+          description: Data view not found
+      summary: Hard delete a data view
+      tags:
+      - data view
+  /data-views/{dataViewId}/details:
+    get:
+      description: Get data view details
+      operationId: getDataViewDetails
+      parameters:
+      - description: The id of a data view
+        explode: false
+        in: path
+        name: dataViewId
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataViewDetails'
+          description: Successful operation
+        "404":
+          description: data view not found
+      summary: Get data view details
+      tags:
+      - data view
+  /data-views/{dataViewId}/statistics:
+    get:
+      description: Get data view statistics
+      operationId: getDataViewStatistics
+      parameters:
+      - description: The id of a data view
+        explode: false
+        in: path
+        name: dataViewId
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataViewStatistics'
+          description: Successful operation
+        "404":
+          description: data view not found
+      summary: Get data view statistics
+      tags:
+      - data view
+  /data-views/{dataViewId}/raw-data:
+    get:
+      description: Get data view raw data
+      operationId: getRawDataInDataView
+      parameters:
+      - description: The id of a data view
+        explode: false
+        in: path
+        name: dataViewId
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      - description: The number of items to skip before starting to collect the result
+          set
+        explode: true
+        in: query
+        name: offset
+        required: false
+        schema:
+          default: 0
+          format: int32
+          type: integer
+        style: form
+      - description: The numbers of items to return
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          default: 10
+          format: int32
+          maximum: 50
+          minimum: 1
+          type: integer
+        style: form
+      - description: ids of raw data
+        explode: false
+        in: query
+        name: rawDataIdList
+        required: false
+        schema:
+          items:
+            format: uuid
+            type: string
+          type: array
+        style: form
+      - description: excluded annotation view with id. Return the raw data items which
+          have no annotation in the annotation view.
+        explode: true
+        in: query
+        name: excludedAnnotationViewId
+        required: false
+        schema:
+          format: uuid
+          type: string
+        style: form
+      - description: included annotation view with id. Return the raw data items which
+          have annotation in the annotation view.
+        explode: true
+        in: query
+        name: includedAnnotationViewId
+        required: false
+        schema:
+          format: uuid
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getRawDataInDataView_200_response'
+          description: Successful operation
+        "404":
+          description: data view not found
+      summary: Get data view raw data
+      tags:
+      - data view
+    post:
+      description: Upload raw data to data view
+      operationId: uploadRawDataToDataView
+      parameters:
+      - description: The id of a data view
+        explode: false
+        in: path
+        name: dataViewId
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/uploadRawDataToDataView_request'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/uploadRawDataToDataView_request_1'
+        required: true
+      responses:
+        "200":
+          description: Successful operation
+      summary: Upload raw data to data view
+      tags:
+      - data view upload
+  /data-views/{dataViewId}/raw-data-hash-list:
+    get:
+      description: Get data view raw data hash list.
+      operationId: getRawDataHashListInDataView
+      parameters:
+      - description: The id of a data view
+        explode: false
+        in: path
+        name: dataViewId
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      - description: The number of items to skip before starting to collect the result
+          set
+        explode: true
+        in: query
+        name: offset
+        required: false
+        schema:
+          default: 0
+          format: int32
+          type: integer
+        style: form
+      - description: The numbers of items to return
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          default: 10
+          format: int32
+          maximum: 50
+          minimum: 1
+          type: integer
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RawDataHashList'
+          description: Successful operation
+        "404":
+          description: data view not found
+      summary: Get data view raw data hash list
+      tags:
+      - data view
+  /data-views/{dataViewId}/annotations:
+    get:
+      description: Get data view annotations
+      operationId: getAnnotationsInDataView
+      parameters:
+      - description: The id of a data view
+        explode: false
+        in: path
+        name: dataViewId
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      - description: The number of items to skip before starting to collect the result
+          set
+        explode: true
+        in: query
+        name: offset
+        required: false
+        schema:
+          default: 0
+          format: int32
+          type: integer
+        style: form
+      - description: The numbers of items to return
+        explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          default: 10
+          format: int32
+          maximum: 50
+          minimum: 1
+          type: integer
+        style: form
+      - description: ids of raw data
+        explode: false
+        in: query
+        name: rawDataIdList
+        required: false
+        schema:
+          items:
+            format: uuid
+            type: string
+          type: array
+        style: form
+      - explode: true
+        in: query
+        name: labelId
+        required: false
+        schema:
+          format: uuid
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getAnnotationsInDataView_200_response'
+          description: Successful operation
+        "404":
+          description: annotation template not found
+      summary: Get data view annotations
+      tags:
+      - data view
+    post:
+      description: Upload annotations to data view
+      operationId: uploadAnnotationToDataView
+      parameters:
+      - description: The id of a data view
+        explode: false
+        in: path
+        name: dataViewId
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/uploadAnnotationToDataView_request'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/uploadAnnotationToDataView_request_1'
+        required: true
+      responses:
+        "200":
+          description: Successful operation
+        "404":
+          description: data view not found
+      summary: Upload annotations to data view
+      tags:
+      - data view upload
+  /data-views/{dataViewId}/model:
+    post:
+      description: Upload model data to data view
+      operationId: uploadModelDataToDataView
+      parameters:
+      - description: The id of a data view
+        explode: false
+        in: path
+        name: dataViewId
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/uploadModelDataToDataView_request'
+        required: true
+      responses:
+        "200":
+          description: Successful operation
+        "404":
+          description: data view not found
+      summary: Upload model data to data view
+      tags:
+      - data view upload
+  /data-views/{dataViewId}/artifact:
+    post:
+      description: Upload file to data view
+      operationId: uploadFileToDataView
+      parameters:
+      - description: The id of a data view
+        explode: false
+        in: path
+        name: dataViewId
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      - explode: false
+        in: header
+        name: X-File-Name
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/octet-stream:
+            schema:
+              format: binary
+              type: string
+        required: true
+      responses:
+        "200":
+          description: Successful operation
+        "404":
+          description: data view not found
+      summary: Upload file to data view
+      tags:
+      - data view upload
+  /data-views/{dataViewId}/dataset-zip:
+    post:
+      description: Upload dataset zip
+      operationId: UploadDatasetZipToDataView
+      parameters:
+      - description: The id of a data view
+        explode: false
+        in: path
+        name: dataViewId
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      - explode: false
+        in: header
+        name: X-File-Name
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/octet-stream:
+            schema:
+              format: binary
+              type: string
+        required: true
+      responses:
+        "200":
+          description: Successful operation
+        "404":
+          description: data view not found
+      summary: Upload dataset zip
+      tags:
+      - data view upload
+    put:
+      description: Update a dataset-zip view meta
+      operationId: UpdateDatasetZipView
+      parameters:
+      - description: The id of a data view
+        explode: false
+        in: path
+        name: dataViewId
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateDatasetZipRequest'
+        description: Update an existed dataset-zip view's meta
+        required: true
+      responses:
+        "200":
+          description: Successful operation
+        "404":
+          description: data view not found
+      summary: Update a dataset-zip view meta
+      tags:
+      - data view
+  /data-views/{dataViewId}/raw-data-divide:
+    post:
+      description: Divide data view
+      operationId: divideDataView
+      parameters:
+      - description: The id of a data view
+        explode: false
+        in: path
+        name: dataViewId
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DivideRawDataDataViewRequest'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DivideRawDataDataViewResponse'
+          description: Successful operation
+        "404":
+          description: data view not found
+      summary: Divide data view
+      tags:
+      - data view
+  /data-views/{dataViewId}/annotation-filter:
+    post:
+      description: Filter annotations in a data view
+      operationId: filterAnnotationsInDataView
+      parameters:
+      - description: The id of a data view
+        explode: false
+        in: path
+        name: dataViewId
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FilterAnnotationsInDataViewRequest'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FilterAnnotationsInDataViewResponse'
+          description: Successful operation
+        "404":
+          description: data view not found
+      summary: Filter annotations in a data view
+      tags:
+      - data view
+  /data-views/{dataViewId}/data-items:
+    delete:
+      description: Delete data item in a data view
+      operationId: deleteDataItemInDataView
+      parameters:
+      - description: The id of a data view
+        explode: false
+        in: path
+        name: dataViewId
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      - description: ids of raw data which are expected to be deleted
+        explode: false
+        in: query
+        name: dataViewItemIdList
+        required: true
+        schema:
+          items:
+            format: uuid
+            type: string
+          type: array
+        style: form
+      responses:
+        "200":
+          description: Successful operation
+        "404":
+          description: data item not found
+      summary: Delete data item in a data view
+      tags:
+      - data view
+  /data-views/{dataViewId}/raw-data-locations:
+    get:
+      description: Get all raw data locations in a data view
+      operationId: GetAllRawDataLocationsInDataView
+      parameters:
+      - description: The id of a data view
+        explode: false
+        in: path
+        name: dataViewId
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RawDataViewLocations'
+          description: Successful operation
+        "404":
+          description: data view not found
+      summary: Get all raw data locations in a data view
+      tags:
+      - data view
+  /data-views/{dataViewId}/model-data-locations:
+    get:
+      description: Get all model data locations in a data view
+      operationId: GetModelDataLocationsInDataView
+      parameters:
+      - description: The id of a data view
+        explode: false
+        in: path
+        name: dataViewId
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModelDataViewLocations'
+          description: Successful operation
+        "404":
+          description: data view not foundF
+      summary: Get all model data locations in a data view
+      tags:
+      - data view
+  /data-views/{dataViewId}/annotation-locations:
+    get:
+      description: Get all annotation locations in a data view
+      operationId: GetAllAnnotationLocationsInDataView
+      parameters:
+      - description: The id of a data view
+        explode: false
+        in: path
+        name: dataViewId
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnnotationViewLocations'
+          description: Successful operation
+        "404":
+          description: data view not found
+      summary: Get all annotation locations in a data view
+      tags:
+      - data view
+  /data-views/{dataViewId}/dataset-zip-location:
+    get:
+      description: Get dataset zip's location in a data view
+      operationId: GetDatasetZipLocationInDataView
+      parameters:
+      - description: The id of a data view
+        explode: false
+        in: path
+        name: dataViewId
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DatasetZipLocation'
+          description: Successful operation
+        "404":
+          description: data view not found
+      summary: Get dataset zip's location in a data view
+      tags:
+      - data view
+  /data-views/{dataViewId}/artifact-locations:
+    get:
+      description: Get files' locations in artifact data view
+      operationId: GetArtifactLocationsInDataView
+      parameters:
+      - description: The id of a data view
+        explode: false
+        in: path
+        name: dataViewId
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArtifactLocations'
+          description: Successful operation
+        "404":
+          description: data view not found
+      summary: Get files' locations in artifact data view
+      tags:
+      - data view
+  /data-views/{dataViewId}/annotation-data:
+    get:
+      description: Get all annotation data in a data view
+      operationId: GetAllAnnotationDataInDataView
+      parameters:
+      - description: The id of a data view
+        explode: false
+        in: path
+        name: dataViewId
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnnotationViewData'
+          description: Successful operation
+        "404":
+          description: data view not found
+      summary: Get all annotation data in a data view
+      tags:
+      - data view
+components:
+  parameters:
+    Offset:
+      description: The number of items to skip before starting to collect the result
+        set
+      explode: true
+      in: query
+      name: offset
+      required: false
+      schema:
+        default: 0
+        format: int32
+        type: integer
+      style: form
+    Limit:
+      description: The numbers of items to return
+      explode: true
+      in: query
+      name: limit
+      required: false
+      schema:
+        default: 10
+        format: int32
+        maximum: 50
+        minimum: 1
+        type: integer
+      style: form
+    RawDataIdList:
+      description: ids of raw data
+      explode: false
+      in: query
+      name: rawDataIdList
+      required: false
+      schema:
+        items:
+          format: uuid
+          type: string
+        type: array
+      style: form
+    AnnotationTemplateId:
+      description: The id of an annotation template
+      explode: false
+      in: path
+      name: annotationTemplateId
+      required: true
+      schema:
+        format: uuid
+        type: string
+      style: simple
+    DataViewId:
+      description: The id of a data view
+      explode: false
+      in: path
+      name: dataViewId
+      required: true
+      schema:
+        format: uuid
+        type: string
+      style: simple
+    FileName:
+      explode: false
+      in: header
+      name: X-File-Name
+      required: true
+      schema:
+        type: string
+      style: simple
+    LabelId:
+      explode: true
+      in: query
+      name: labelId
+      required: false
+      schema:
+        format: uuid
+        type: string
+      style: form
+  schemas:
+    Error:
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+      required:
+      - code
+      - message
+      type: object
+    MergeDataViewsRequest:
+      example:
+        dataViewIdList:
+        - 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        - 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        name: name
+        description: description
+      properties:
+        name:
+          description: name of the merged data view
+          type: string
+        description:
+          description: description of the merged data view
+          type: string
+        dataViewIdList:
+          items:
+            format: uuid
+            type: string
+          type: array
+      type: object
+    MergeDataViewsSuccessResp:
+      example:
+        dataViewId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+      properties:
+        dataViewId:
+          format: uuid
+          type: string
+      type: object
+    AnnotationTemplateTypeList:
+      example:
+      - bounding-box
+      - polygon
+      items:
+        type: string
+      type: array
+    AnnotationTemplateListItem:
+      example:
+        name: name
+        labelCount: 0
+        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        type: type
+        createAt: 1672320075000
+      properties:
+        id:
+          description: the id of the annotation template
+          format: uuid
+          type: string
+        name:
+          description: name of the annotation template
+          type: string
+        createAt:
+          description: Unix timestamp in ms
+          example: 1672320075000
+          format: int64
+          type: integer
+        type:
+          description: the type of the annotation template
+          type: string
+        labelCount:
+          description: the number of labels annotation template has
+          format: int32
+          type: integer
+      type: object
+    Label:
+      example:
+        color: 0
+        superCategoryName: superCategoryName
+        keyPointSkeleton:
+        - - 6
+          - 6
+        - - 6
+          - 6
+        coverImageUrl: coverImageUrl
+        name: name
+        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        keyPointDef:
+        - keyPointDef
+        - keyPointDef
+      properties:
+        id:
+          description: the id of the label
+          format: uuid
+          type: string
+        name:
+          description: the name of the label
+          type: string
+        superCategoryName:
+          description: the super category name
+          type: string
+        color:
+          format: int32
+          type: integer
+        keyPointDef:
+          description: the defination of the key points
+          items:
+            type: string
+          type: array
+        keyPointSkeleton:
+          items:
+            items:
+              description: "the size should be 2. Each item indicates keypoints with\
+                \ index item[0] and index item[1] have a connect"
+              format: int32
+              type: integer
+            type: array
+          type: array
+        coverImageUrl:
+          type: string
+      required:
+      - color
+      - name
+      type: object
+    WordList:
+      items:
+        description: the words in word list should not be equal
+        type: string
+      type: array
+    AnnotationTemplateDetails:
+      example:
+        wordList:
+        - wordList
+        - wordList
+        name: name
+        updateAt: 1672320075000
+        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        type: type
+        createAt: 1672320075000
+        labels:
+        - color: 0
+          superCategoryName: superCategoryName
+          keyPointSkeleton:
+          - - 6
+            - 6
+          - - 6
+            - 6
+          coverImageUrl: coverImageUrl
+          name: name
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          keyPointDef:
+          - keyPointDef
+          - keyPointDef
+        - color: 0
+          superCategoryName: superCategoryName
+          keyPointSkeleton:
+          - - 6
+            - 6
+          - - 6
+            - 6
+          coverImageUrl: coverImageUrl
+          name: name
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          keyPointDef:
+          - keyPointDef
+          - keyPointDef
+      properties:
+        id:
+          description: the id of the annotation template
+          format: uuid
+          type: string
+        name:
+          description: name of the annotation template
+          type: string
+        createAt:
+          description: Unix timestamp in ms
+          example: 1672320075000
+          format: int64
+          type: integer
+        updateAt:
+          description: Unix timestamp in ms
+          example: 1672320075000
+          format: int64
+          type: integer
+        type:
+          description: the type of the annotation template
+          type: string
+        labels:
+          items:
+            $ref: '#/components/schemas/Label'
+          type: array
+        wordList:
+          items:
+            description: the words in word list should not be equal
+            type: string
+          type: array
+      type: object
+    FilterAnnotationsInDataViewRequest:
+      example:
+        rawDataViewId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+      properties:
+        rawDataViewId:
+          description: the id of the raw data view
+          format: uuid
+          type: string
+      type: object
+    FilterAnnotationsInDataViewResponse:
+      example:
+        annotationViewId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+      properties:
+        annotationViewId:
+          description: the id of the filtered annotation view.
+          format: uuid
+          type: string
+      type: object
+    CreateAnnotationTemplateRequest:
+      example:
+        wordList:
+        - wordList
+        - wordList
+        name: name
+        description: description
+        type: type
+        labels:
+        - color: 0
+          superCategoryName: superCategoryName
+          keyPointSkeleton:
+          - - 6
+            - 6
+          - - 6
+            - 6
+          coverImageUrl: coverImageUrl
+          name: name
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          keyPointDef:
+          - keyPointDef
+          - keyPointDef
+        - color: 0
+          superCategoryName: superCategoryName
+          keyPointSkeleton:
+          - - 6
+            - 6
+          - - 6
+            - 6
+          coverImageUrl: coverImageUrl
+          name: name
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          keyPointDef:
+          - keyPointDef
+          - keyPointDef
+      properties:
+        name:
+          description: name of the annotation template
+          type: string
+        type:
+          description: the type of the annotation template
+          type: string
+        description:
+          description: the description of the annotation template
+          type: string
+        labels:
+          items:
+            $ref: '#/components/schemas/Label'
+          type: array
+        wordList:
+          items:
+            description: the words in word list should not be equal
+            type: string
+          type: array
+      required:
+      - name
+      - type
+      type: object
+    UpdateDatasetZipRequest:
+      example:
+        trainAnnotationViewId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        valRawDataViewId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        rawDataViewId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        progress: ""
+        trainRawDataViewId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        annotationTemplateId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        valAnnotationViewId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        status: status
+        annotationViewId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+      properties:
+        progress:
+          type: float
+        status:
+          type: string
+        trainRawDataViewId:
+          format: uuid
+          type: string
+        trainAnnotationViewId:
+          format: uuid
+          type: string
+        valRawDataViewId:
+          format: uuid
+          type: string
+        valAnnotationViewId:
+          format: uuid
+          type: string
+        annotationTemplateId:
+          format: uuid
+          type: string
+        rawDataViewId:
+          format: uuid
+          type: string
+        annotationViewId:
+          format: uuid
+          type: string
+      type: object
+    UpdateAnnotationTemplateRequest:
+      example:
+        wordList:
+        - wordList
+        - wordList
+        name: name
+        description: description
+        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        type: type
+        labels:
+        - color: 0
+          superCategoryName: superCategoryName
+          keyPointSkeleton:
+          - - 6
+            - 6
+          - - 6
+            - 6
+          coverImageUrl: coverImageUrl
+          name: name
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          keyPointDef:
+          - keyPointDef
+          - keyPointDef
+        - color: 0
+          superCategoryName: superCategoryName
+          keyPointSkeleton:
+          - - 6
+            - 6
+          - - 6
+            - 6
+          coverImageUrl: coverImageUrl
+          name: name
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          keyPointDef:
+          - keyPointDef
+          - keyPointDef
+      properties:
+        id:
+          description: the id of the annotation template
+          format: uuid
+          type: string
+        name:
+          description: the name of the annotation template
+          type: string
+        type:
+          description: the type of the annotation template
+          type: string
+        description:
+          description: the description of the annotation template
+          type: string
+        labels:
+          items:
+            $ref: '#/components/schemas/Label'
+          type: array
+        wordList:
+          items:
+            description: the words in word list should not be equal
+            type: string
+          type: array
+      required:
+      - name
+      - type
+      type: object
+    KeyPointDef:
+      description: the defination of the key points
+      items:
+        type: string
+      type: array
+    KeyPointSkeleton:
+      items:
+        items:
+          description: "the size should be 2. Each item indicates keypoints with index\
+            \ item[0] and index item[1] have a connect"
+          format: int32
+          type: integer
+        type: array
+      type: array
+    RawDataHashList:
+      items:
+        $ref: '#/components/schemas/RawDataHashList_inner'
+      type: array
+    DataViewListItem:
+      example:
+        rawDataType: null
+        annotationTemplateType: annotationTemplateType
+        name: name
+        viewType: null
+        annotationTemplateId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        createAt: 1672320075000
+      properties:
+        id:
+          description: the id of the data view
+          format: uuid
+          type: string
+        name:
+          description: the name of the data view
+          type: string
+        viewType:
+          $ref: '#/components/schemas/DataViewType'
+        rawDataType:
+          $ref: '#/components/schemas/RawDataType'
+        annotationTemplateId:
+          description: "if data view is an annotation view, it has annotation template\
+            \ id"
+          format: uuid
+          type: string
+        annotationTemplateType:
+          description: "if data view is an annotation view, it has annotation template\
+            \ type"
+          type: string
+        createAt:
+          description: Unix timestamp in ms
+          example: 1672320075000
+          format: int64
+          type: integer
+      type: object
+    MoveDataViewItemsRequest:
+      example:
+        dstDataViewId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        srcDataViewId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+      properties:
+        srcDataViewId:
+          description: the id of the source data view
+          format: uuid
+          type: string
+        dstDataViewId:
+          description: the id of the destination data view
+          format: uuid
+          type: string
+      type: object
+    DataViewDetails:
+      example:
+        trainAnnotationViewId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        valRawDataViewId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        description: description
+        annotationTemplateId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        commitId: commitId
+        createAt: 1672320075000
+        zipFormat: null
+        rawDataType: null
+        rawDataViewId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        annotationTemplateType: annotationTemplateType
+        name: name
+        viewType: null
+        progress: ""
+        trainRawDataViewId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        valAnnotationViewId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        status: status
+        annotationViewId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+      properties:
+        id:
+          description: the id of the data view
+          format: uuid
+          type: string
+        name:
+          description: the name of the data view
+          type: string
+        viewType:
+          $ref: '#/components/schemas/DataViewType'
+        description:
+          description: the description of the data view
+          type: string
+        rawDataType:
+          $ref: '#/components/schemas/RawDataType'
+        annotationTemplateType:
+          description: "if data view is an annotation view, it has annotation template\
+            \ type"
+          type: string
+        createAt:
+          description: Unix timestamp in ms
+          example: 1672320075000
+          format: int64
+          type: integer
+        progress:
+          type: float
+        commitId:
+          type: string
+        status:
+          type: string
+        zipFormat:
+          $ref: '#/components/schemas/ZipFormat'
+        trainRawDataViewId:
+          format: uuid
+          type: string
+        trainAnnotationViewId:
+          format: uuid
+          type: string
+        valRawDataViewId:
+          format: uuid
+          type: string
+        valAnnotationViewId:
+          format: uuid
+          type: string
+        annotationTemplateId:
+          format: uuid
+          type: string
+        rawDataViewId:
+          format: uuid
+          type: string
+        annotationViewId:
+          format: uuid
+          type: string
+      type: object
+    DataViewStatistics:
+      example:
+        labelDistribution:
+        - labelId: labelId
+          count: 1
+          ratio: ""
+        - labelId: labelId
+          count: 1
+          ratio: ""
+        labelCount: 6
+        totalDataSize: 5
+        itemCount: 0
+      properties:
+        itemCount:
+          format: int32
+          type: integer
+        labelCount:
+          description: the number of labels in the annotation data view.
+          format: int32
+          type: integer
+        labelDistribution:
+          description: the distribution of labels in the annotation data view.
+          items:
+            $ref: '#/components/schemas/LabelDistribution'
+          type: array
+        totalDataSize:
+          description: the total size of the data in the data view in bytes.
+          format: int64
+          type: integer
+      type: object
+    LabelDistribution:
+      example:
+        labelId: labelId
+        count: 1
+        ratio: ""
+      properties:
+        labelId:
+          description: the label id
+          type: string
+        count:
+          description: the number of the label in the data view.
+          format: int32
+          type: integer
+        ratio:
+          description: the ratio of the label in the data view.
+          type: float
+      type: object
+    RawDataViewLocations:
+      example:
+        dataViewId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        rawDataType: null
+        dataItems:
+        - objectKey: objectKey
+          dataName: dataName
+          dataItemId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        - objectKey: objectKey
+          dataName: dataName
+          dataItemId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        viewType: null
+      properties:
+        dataViewId:
+          format: uuid
+          type: string
+        viewType:
+          $ref: '#/components/schemas/DataViewType'
+        rawDataType:
+          $ref: '#/components/schemas/RawDataType'
+        dataItems:
+          items:
+            $ref: '#/components/schemas/S3Storage_inner'
+          type: array
+      type: object
+    DatasetZipLocation:
+      example:
+        dataViewId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        dataItems:
+        - objectKey: objectKey
+          dataName: dataName
+          dataItemId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        - objectKey: objectKey
+          dataName: dataName
+          dataItemId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        viewType: null
+      properties:
+        dataViewId:
+          format: uuid
+          type: string
+        viewType:
+          $ref: '#/components/schemas/DataViewType'
+        dataItems:
+          items:
+            $ref: '#/components/schemas/S3Storage_inner'
+          type: array
+      type: object
+    ArtifactLocations:
+      example:
+        dataViewId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        dataItems:
+        - objectKey: objectKey
+          dataName: dataName
+          dataItemId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        - objectKey: objectKey
+          dataName: dataName
+          dataItemId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        viewType: null
+      properties:
+        dataViewId:
+          format: uuid
+          type: string
+        viewType:
+          $ref: '#/components/schemas/DataViewType'
+        dataItems:
+          items:
+            $ref: '#/components/schemas/S3Storage_inner'
+          type: array
+      type: object
+    ModelDataViewLocations:
+      example:
+        dataViewId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        dataItems:
+        - objectKey: objectKey
+          dataName: dataName
+          dataItemId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        - objectKey: objectKey
+          dataName: dataName
+          dataItemId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        viewType: null
+      properties:
+        dataViewId:
+          format: uuid
+          type: string
+        viewType:
+          $ref: '#/components/schemas/DataViewType'
+        dataItems:
+          items:
+            $ref: '#/components/schemas/S3Storage_inner'
+          type: array
+      type: object
+    AnnotationViewLocations:
+      example:
+        dataViewId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        dataItems:
+        - objectKey: objectKey
+          dataName: dataName
+          dataItemId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        - objectKey: objectKey
+          dataName: dataName
+          dataItemId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        viewType: null
+        annotationTemplateId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+      properties:
+        dataViewId:
+          format: uuid
+          type: string
+        annotationTemplateId:
+          format: uuid
+          type: string
+        viewType:
+          $ref: '#/components/schemas/DataViewType'
+        dataItems:
+          items:
+            $ref: '#/components/schemas/S3Storage_inner'
+          type: array
+      type: object
+    AnnotationViewData:
+      example:
+        dataViewId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        dataItems:
+        - textData: textData
+          dataItemId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          labels:
+          - 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          - 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        - textData: textData
+          dataItemId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          labels:
+          - 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          - 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        viewType: null
+        annotationTemplateId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+      properties:
+        dataViewId:
+          format: uuid
+          type: string
+        annotationTemplateId:
+          format: uuid
+          type: string
+        viewType:
+          $ref: '#/components/schemas/DataViewType'
+        dataItems:
+          items:
+            $ref: '#/components/schemas/AnnotationData_inner'
+          type: array
+      type: object
+    S3Storage:
+      items:
+        $ref: '#/components/schemas/S3Storage_inner'
+      type: array
+    AnnotationData:
+      items:
+        $ref: '#/components/schemas/AnnotationData_inner'
+      type: array
+    DivideRawDataDataViewRequest:
+      description: the sum of the ratios should be 100
+      items:
+        $ref: '#/components/schemas/DivideRawDataDataViewRequest_inner'
+      type: array
+    DivideRawDataDataViewResponse:
+      items:
+        $ref: '#/components/schemas/DivideRawDataDataViewResponse_inner'
+      type: array
+    CreateDataViewRequest:
+      example:
+        rawDataType: null
+        relatedDataViewId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        rawDataViewId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        viewType: null
+        description: description
+        dataViewName: dataViewName
+        annotationTemplateId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        zipFormat: null
+        annotationViewId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+      properties:
+        dataViewName:
+          description: the name of the data view
+          type: string
+        description:
+          description: the description of the data view
+          type: string
+        viewType:
+          $ref: '#/components/schemas/DataViewType'
+        rawDataType:
+          $ref: '#/components/schemas/RawDataType'
+        zipFormat:
+          $ref: '#/components/schemas/ZipFormat'
+        relatedDataViewId:
+          description: "If it is an annotation type data view, it must have a related\
+            \ raw-data data view"
+          format: uuid
+          type: string
+        annotationTemplateId:
+          description: "If it is an annotation type data view, it must have a related\
+            \ annotation template id. If it is a dataset-zip data view, it can have\
+            \ an annotation template id to indicate the annotation template of the\
+            \ annotation data."
+          format: uuid
+          type: string
+        rawDataViewId:
+          description: "If it is a dataset-zip type data view, it can have a raw data\
+            \ view id to upload raw data to the data view"
+          format: uuid
+          type: string
+        annotationViewId:
+          description: "If it is a dataset-zip type data view, it can have a annotation\
+            \ view id to upload annotation data to the data view"
+          format: uuid
+          type: string
+      type: object
+    RawDataListItem:
+      example:
+        rawDataId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        url: url
+      properties:
+        rawDataId:
+          description: the id of the raw data
+          format: uuid
+          type: string
+        url:
+          type: string
+      type: object
+    AnnotationListItem:
+      description: the result of get annotation list
+      example:
+        rawDataId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        dataItemId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        url: url
+        labels:
+        - 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        - 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+      properties:
+        rawDataId:
+          description: the id of the raw data
+          format: uuid
+          type: string
+        dataItemId:
+          description: the id of the annotation data item
+          format: uuid
+          type: string
+        url:
+          type: string
+        labels:
+          items:
+            description: the label id of the raw data under an annotation template
+            format: uuid
+            type: string
+          type: array
+      type: object
+    ImageData:
+      properties:
+        format:
+          enum:
+          - png
+          - jpg
+          - gif
+          - raw
+          - bmp
+          type: string
+        data:
+          format: binary
+          type: string
+      type: object
+    DataViewType:
+      enum:
+      - raw-data
+      - annotation
+      - model
+      - dataset-zip
+      - artifact
+      type: string
+    UploadAnnotationFormat:
+      description: the format of the data
+      enum:
+      - all-annotation-single-file-local
+      - per-annotation-per-file-local
+      type: string
+    RawDataType:
+      description: the type of raw data
+      enum:
+      - image
+      - text
+      - rgbd
+      - points-3d
+      type: string
+    TimeFmtInMs:
+      description: Unix timestamp in ms
+      example: 1672320075000
+      format: int64
+      type: integer
+    ZipFormat:
+      description: the structure of the files in zip file
+      enum:
+      - image-classification
+      - rgbd-bounding-box-2d-and-3d
+      - image-segmentation-masks
+      - ocr
+      - coco
+      - raw-data-images
+      - sam
+      - points-3d-zip
+      type: string
+    FoldUriType:
+      description: the folder path of the resource
+      format: uri
+      type: string
+    CreateAnnoTemplateSuccessResp:
+      example:
+        annotationTemplateId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+      properties:
+        annotationTemplateId:
+          format: uuid
+          type: string
+      type: object
+    CreateDataViewSuccessResp:
+      example:
+        dataViewId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+      properties:
+        dataViewId:
+          format: uuid
+          type: string
+      type: object
+    copyAnnotationTemplate_200_response:
+      example:
+        annotationTemplateId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+      properties:
+        annotationTemplateId:
+          description: annotation template id of the copied annotation template
+          format: uuid
+          type: string
+      type: object
+    getRawDataInDataView_200_response:
+      example:
+        rawDataType: null
+        rawDataList:
+        - rawDataId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          url: url
+        - rawDataId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          url: url
+      properties:
+        rawDataType:
+          $ref: '#/components/schemas/RawDataType'
+        rawDataList:
+          items:
+            $ref: '#/components/schemas/RawDataListItem'
+          type: array
+      type: object
+    uploadRawDataToDataView_request:
+      properties:
+        files:
+          items:
+            format: binary
+            type: string
+          type: array
+      type: object
+    uploadRawDataToDataView_request_1:
+      properties:
+        resourcePath:
+          description: the folder path of the resource
+          format: uri
+          type: string
+      required:
+      - resourcePath
+      type: object
+    getAnnotationsInDataView_200_response:
+      example:
+        annotationList:
+        - rawDataId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          dataItemId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          url: url
+          labels:
+          - 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          - 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        - rawDataId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          dataItemId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          url: url
+          labels:
+          - 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          - 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        annotationTemplateType: annotationTemplateType
+        annotationTemplateId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+      properties:
+        annotationTemplateId:
+          format: uuid
+          type: string
+        annotationTemplateType:
+          type: string
+        annotationList:
+          items:
+            $ref: '#/components/schemas/AnnotationListItem'
+          type: array
+      type: object
+    uploadAnnotationToDataView_request:
+      properties:
+        fileMeta:
+          format: binary
+          type: string
+        files:
+          items:
+            format: binary
+            type: string
+          type: array
+      type: object
+    uploadAnnotationToDataView_request_1:
+      properties:
+        resourcePath:
+          description: the folder path of the resource
+          format: uri
+          type: string
+        annotationTemplateId:
+          format: uuid
+          type: string
+        format:
+          $ref: '#/components/schemas/UploadAnnotationFormat'
+      type: object
+    uploadModelDataToDataView_request:
+      properties:
+        commitId:
+          type: string
+        progress:
+          type: string
+        modelJit:
+          format: binary
+          type: string
+        onnx:
+          format: binary
+          type: string
+        dynamicOnnx:
+          format: binary
+          type: string
+        configPy:
+          format: binary
+          type: string
+        bestPth:
+          format: binary
+          type: string
+        lastPth:
+          format: binary
+          type: string
+        outputTemplate:
+          format: binary
+          type: string
+        logs:
+          items:
+            format: binary
+            type: string
+          type: array
+      type: object
+    RawDataHashList_inner:
+      example:
+        sha256: sha256
+        rawDataId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+      properties:
+        rawDataId:
+          format: uuid
+          type: string
+        sha256:
+          type: string
+      type: object
+    S3Storage_inner:
+      example:
+        objectKey: objectKey
+        dataName: dataName
+        dataItemId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+      properties:
+        dataItemId:
+          format: uuid
+          type: string
+        dataName:
+          type: string
+        objectKey:
+          description: the object key of the data in s3 storage
+          type: string
+      type: object
+    AnnotationData_inner:
+      example:
+        textData: textData
+        dataItemId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        labels:
+        - 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        - 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+      properties:
+        dataItemId:
+          format: uuid
+          type: string
+        labels:
+          items:
+            description: the label id of the raw data under an annotation template
+            format: uuid
+            type: string
+          type: array
+        textData:
+          description: text format annotation data
+          type: string
+      type: object
+    DivideRawDataDataViewRequest_inner:
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        ratio:
+          type: integer
+      type: object
+    DivideRawDataDataViewResponse_inner:
+      example:
+        dataViewId: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        name: name
+        itemCount: 0
+      properties:
+        name:
+          type: string
+        dataViewId:
+          format: uuid
+          type: string
+        itemCount:
+          format: int32
+          type: integer
+      type: object
